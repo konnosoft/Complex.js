@@ -299,8 +299,6 @@
   });
 
   $(window).trigger('hashchange');
-
-  $('#throbber').hide();
 </script>
 <style>
   /* Stolen from https://m.wolframalpha.com */
@@ -347,6 +345,7 @@
   }
 
   #throbber {
+    display: none;
     margin-top: 30px;
     text-align: center;
   }
