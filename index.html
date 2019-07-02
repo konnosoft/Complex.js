@@ -146,7 +146,7 @@
         const derivative = D(value);
 
         if (derivative != null) {
-          output('Derivative', `d/(dx) (${value}) = ${derivative}`);
+          output('Derivative', `D(${value}) = ${derivative}`);
         }
 
         // Antidifferentiation
@@ -155,7 +155,7 @@
         if (antiderivative != null) {
           output(
             'Indefinite integral',
-            `int (${value}) = ${antiderivative}`,
+            `D^-1(${value}) = ${antiderivative}`,
             '+ constant',
           );
         }
