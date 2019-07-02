@@ -235,7 +235,7 @@
   }
 
   function IntegerQ(value) {
-    if (!BigInt) return Number.isInteger(Number(value));
+    if (typeof BigInt === 'undefined') return Number.isInteger(Number(value));
 
     try {
       BigInt(String(value));
