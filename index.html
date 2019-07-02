@@ -71,105 +71,116 @@
 
   const AMParser = new AsciiMathParser();
 
-  $('form').submit((event) => {
-    event.preventDefault();
+  const $throbber = $('#throbber');
 
-    let input = $('input')
-      .val()
-      .trim();
+  $('form')
+    .submit((event) => {
+      event.preventDefault();
+      $throbber.show();
 
-    if (input === '') return;
+      let input = $('input')
+        .val()
+        .trim();
 
-    history.pushState(null, null, `#${encodeURIComponent(input)}`);
+      if (input === '') return;
 
-    input = input.replace(/\*\*/g, '^');
+      history.pushState(null, null, `#${encodeURIComponent(input)}`);
 
-    input = input.replace(/[a-z]{2,}/gi, ($0) => {
-      if ($0 in Algebrite || $0 in Math) return $0;
+      input = input.replace(/\*\*/g, '^');
 
-      const lowercase = $0.toLowerCase();
-      if (lowercase in Algebrite || lowercase in Math) return lowercase;
+      input = input.replace(/[a-z]{2,}/gi, ($0) => {
+        if ($0 in Algebrite || $0 in Math) return $0;
 
-      if (Number.isFinite(Math[$0.toUpperCase()])) return $0;
+        const lowercase = $0.toLowerCase();
+        if (lowercase in Algebrite || lowercase in Math) return lowercase;
 
-      return $0.length === 1 ? $0 : [...$0].join(' ');
+        if (Number.isFinite(Math[$0.toUpperCase()])) return $0;
+
+        return $0.length === 1 ? $0 : [...$0].join(' ');
+      });
+
+      $('#output').empty();
+
+      output('Input', input);
+
+      // Simplification
+      const value = Simplify(input);
+
+      if (value == null) return;
+
+      if (!SameQ(value, input)) {
+        output('Result', value);
+      }
+
+      const valueAsNumber = Number(value);
+      const isInteger = IntegerQ(value);
+      const isDecimal = isInteger || Number.isFinite(valueAsNumber);
+
+      if (isInteger && valueAsNumber > 0) {
+        // Prime factorization
+        const factoredForm = Factor(value);
+        const isPrime = PrimeQ(value);
+
+        output(
+          'Prime factorization',
+          factoredForm,
+          isPrime && '(prime number)',
+        );
+      } else if (!isDecimal) {
+        // Polynomial factorization
+        const factoredForm = Factor(value);
+
+        const alternateForms = [
+          ...(factoredForm != null &&
+          !SameQ(factoredForm, input) &&
+          !SameQ(factoredForm, value)
+            ? [factoredForm]
+            : []),
+        ];
+
+        if (alternateForms.length) {
+          output('Alternate form', alternateForms);
+        }
+
+        // Differentiation
+        const derivative = D(value);
+
+        if (derivative != null) {
+          output('Derivative', `d/(dx) (${value}) = ${derivative}`);
+        }
+
+        // Antidifferentiation
+        const antiderivative = Integrate(value);
+
+        if (antiderivative != null) {
+          output(
+            'Indefinite integral',
+            `int (${value}) = ${antiderivative}`,
+            '+ constant',
+          );
+        }
+
+        // Symbolic equation solving
+        const roots = Solve(value);
+
+        if (roots != null) {
+          output('Solution', roots.map((root) => `x = ${root}`));
+        }
+
+        // Numerical equation solving
+        const numericalRoots = FindRoot(value);
+
+        if (numericalRoots != null) {
+          output(
+            'Numerical solution',
+            numericalRoots.map((root) => `x ~~ ${root}`),
+          );
+        }
+      }
+    })
+    .submit(() => {
+      $throbber.hide();
     });
-
-    $('#output').empty();
-
-    output('Input', input);
-
-    // Simplification
-    const value = Simplify(input);
-
-    if (value == null) return;
-
-    if (!SameQ(value, input)) {
-      output('Result', value);
-    }
-
-    const valueAsNumber = Number(value);
-    const isInteger = IntegerQ(value);
-    const isDecimal = isInteger || Number.isFinite(valueAsNumber);
-
-    if (isInteger && valueAsNumber > 0) {
-      // Prime factorization
-      const factoredForm = Factor(value);
-      const isPrime = PrimeQ(value);
-
-      output('Prime factorization', factoredForm, isPrime && '(prime number)');
-    } else if (!isDecimal) {
-      // Polynomial factorization
-      const factoredForm = Factor(value);
-
-      const alternateForms = [
-        ...(factoredForm != null &&
-        !SameQ(factoredForm, input) &&
-        !SameQ(factoredForm, value)
-          ? [factoredForm]
-          : []),
-      ];
-
-      if (alternateForms.length) {
-        output('Alternate form', alternateForms);
-      }
-
-      // Differentiation
-      const derivative = D(value);
-
-      if (derivative != null) {
-        output('Derivative', `d/(dx) (${value}) = ${derivative}`);
-      }
-
-      // Antidifferentiation
-      const antiderivative = Integrate(value);
-
-      if (antiderivative != null) {
-        output(
-          'Indefinite integral',
-          `int (${value}) = ${antiderivative}`,
-          '+ constant',
-        );
-      }
-
-      // Symbolic equation solving
-      const roots = Solve(value);
-
-      if (roots != null) {
-        output('Solution', roots.map((root) => `x = ${root}`));
-      }
-
-      // Numerical equation solving
-      const numericalRoots = FindRoot(value);
-
-      if (numericalRoots != null) {
-        output(
-          'Numerical solution',
-          numericalRoots.map((root) => `x ~~ ${root}`),
-        );
-      }
-    }
-  });
 
   function output(title, results, remarks) {
     if (!Array.isArray(results)) results = [results];
