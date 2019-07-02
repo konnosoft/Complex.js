@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Calculator</title>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.css"
+  integrity="sha384-yFRtMMDnQtDRO8rLpMIKrtPCD5jdktao2TV19YiZYWMDkUR5GQZR/NOVTdquEx1j"
+  crossorigin="anonymous"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/katex@0.10.2/dist/katex.min.js"
+  integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ"
+  crossorigin="anonymous"
+></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/algebrite@1.2.1/dist/algebrite.bundle-for-browser.js"
+  integrity="sha384-5P0ucNhwmqzZlaS6HZpYGCQUtXnk+9qDz3X3fOpY/G9/GXwhaahIr6v+KoxgZ1Dv"
+  crossorigin="anonymous"
+></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.slim.min.js"
+  integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+  crossorigin="anonymous"
+></script>
+<form>
+  <input />
+  <button></button>
+</form>
+<img
+  id="throbber"
+  title="Flickr-inspired Pulsar Throbber by swilsonmc [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons https://commons.wikimedia.org/wiki/File:Flickr-inspired_Pulsar_Throbber.gif"
+  alt="COMPUTING..."
+  src="https://upload.wikimedia.org/wikipedia/commons/6/61/Flickr-inspired_Pulsar_Throbber.gif"
+/>
+<section id="output"></section>
+<script type="module">
+  import AsciiMathParser from 'https://dev.jspm.io/npm:asciimath2tex@1.1.0/asciimath2tex.js';
+
+  const AMParser = new AsciiMathParser();
+
+  const $throbber = $('#throbber');
+
+  $('form')
+    .submit((event) => {
+      event.preventDefault();
+      $throbber.show();
+
+      let input = $('input')
+        .val()
+        .trim();
+
+      if (input === '') return;
+
+      history.pushState(null, null, `#${input}`);
+
+      input = input.replace(/\*\*/g, '^');
+
+      input = input.replace(/[a-z]{2,}/gi, ($0) => {
+        if ($0 in Algebrite || $0 in Math) return $0;
+
+        const lowercase = $0.toLowerCase();
+        if (lowercase in Algebrite || lowercase in Math) return lowercase;
+
+        if (Number.isFinite(Math[$0.toUpperCase()])) return $0;
+
+        return $0.length === 1 ? $0 : [...$0].join(' ');
+      });
+
+      $('#output').empty();
+
+      output('Input', input);
+
+      // Simplification
+      const value = Simplify(input);
+
+      if (value == null) return;
+
+      if (!SameQ(value, input)) {
+        output('Result', value);
+      }
+
+      const valueAsNumber = Number(value);
+      const isInteger = IntegerQ(value);
+      const isDecimal = isInteger || Number.isFinite(valueAsNumber);
+
+      if (isInteger && valueAsNumber > 1) {
+        // Prime factorization
+        const factoredForm = Factor(value);
+        const isPrime = PrimeQ(value);
+
+        output(
+          'Prime factorization',
+          factoredForm,
+          isPrime && '(prime number)',
+        );
+      } else if (!isDecimal) {
+        // Polynomial factorization
+        const factoredForm = Factor(value);
+
+        const alternateForms = [
+          ...(factoredForm != null &&
+          !SameQ(factoredForm, input) &&
+          !SameQ(factoredForm, value)
+            ? [factoredForm]
+            : []),
+        ];
+
+        if (alternateForms.length) {
+          output(`Alternate form`, alternateForms);
+        }
+
+        // Differentiation
+        const derivative = D(value);
+
+        if (derivative != null) {
+          output(`Derivative`, `d/(dx) (${value}) = ${derivative}`);
+        }
+
+        // Antidifferentiation
+        const antiderivative = Integrate(value);
+
+        if (antiderivative != null) {
+          output(
+            `Derivative`,
+            `int (${value}) = ${antiderivative}`,
+            '+ constant',
+          );
+        }
+
+        // Symbolic equation solving
+        const roots = Solve(value);
+
+        if (roots != null) {
+          output(`Solution`, roots.map((root) => `x = ${root}`));
+        }
+
+        // Numerical equation solving
+        const numericalRoots = FindRoot(value);
+
+        if (numericalRoots != null) {
+          output(
+            `Numerical solution`,
+            numericalRoots.map((root) => `x ~~ ${root}`),
+          );
+        }
+      }
+    })
+    .submit(() => {
+      $throbber.hide();
+    });
+
+  function output(title, results, remarks) {
+    if (!Array.isArray(results)) results = [results];
+    if (!Array.isArray(remarks)) remarks = [remarks];
+
+    $('#output').append(
+      $('<section>').append(
+        $('<h2>').text(`${title}${results.length > 1 ? 's' : ''}:`),
+        results.map((result, i) =>
+          $('<p>').append(
+            katex.renderToString(AMParser.parse(String(result))),
+            remarks[i]
+              ? [document.createTextNode(' '), $('<small>').text(remarks[i])]
+              : null,
+          ),
+        ),
+      ),
+    );
+  }
+
+  function D(expression) {
+    try {
+      return Algebrite.derivative(expression);
+    } catch (error) {}
+  }
+
+  function Integrate(expression) {
+    try {
+      return Algebrite.integral(expression);
+    } catch (error) {}
+  }
+
+  function Evaluate(expression) {
+    let value;
+
+    try {
+      value = Algebrite.eval(expression);
+    } catch (error) {}
+
+    return nilToNull(value);
+  }
+
+  function Factor(object) {
+    let value;
+
+    try {
+      value = Algebrite.factor(object);
+    } catch (error) {}
+
+    return value;
+  }
+
+  function FindRoot(expression) {
+    let roots;
+
+    try {
+      roots = Algebrite.nroots(expression);
+    } catch (error) {
+      return;
+    }
+
+    return parseArray(roots);
+  }
+
+  function IntegerQ(value) {
+    try {
+      BigInt(String(value));
+    } catch (error) {
+      return false;
+    }
+
+    return true;
+  }
+
+  function PrimeQ(expression) {
+    return String(Algebrite.isprime(expression)) === '1';
+  }
+
+  function SameQ(lhs, rhs) {
+    const normalize = (value) => String(value).replace(/[*\s]+/g, '');
+    return normalize(lhs) === normalize(rhs);
+  }
+
+  function Simplify(expression) {
+    let value;
+
+    try {
+      value = Algebrite.simplify(expression);
+    } catch (error) {
+      return;
+    }
+
+    return nilToNull(value);
+  }
+
+  function Solve(expression) {
+    let roots;
+
+    try {
+      roots = Algebrite.roots(expression);
+    } catch (error) {
+      return;
+    }
+
+    return parseArray(roots);
+  }
+
+  function parseArray(string) {
+    return String(string)
+      .replace(/^\[|\]$/g, '')
+      .split(',');
+  }
+
+  function nilToNull(value) {
+    return String(value) === 'nil' ? null : value;
+  }
+
+  $(window).on('hashchange', () => {
+    const input = location.hash.replace(/^#/, '');
+
+    if (input === '') return;
+
+    $('input').val(decodeURIComponent(input));
+    $('form').submit();
+  });
+
+  $(window).trigger('hashchange');
+</script>
+<style>
+  /* Stolen from https://m.wolframalpha.com */
+
+  body,
+  h2,
+  input {
+    color: #222;
+    font: normal 13px Arial, Helvetica, sans-serif;
+  }
+
+  body {
+    margin: 0 auto;
+    max-width: 670px;
+  }
+
+  form {
+    align-items: center;
+    border: 1pt solid #fa6800;
+    border-radius: 6px;
+    box-shadow: 0 0 0 3px #ffc104;
+    display: flex;
+    height: 36px;
+    justify-content: space-between;
+    margin: 18px 18px 0;
+    max-width: 650px;
+    padding: 0 8px;
+  }
+
+  input {
+    border: 0;
+    font-size: 16px;
+    outline: 0;
+    text-indent: 7px;
+    width: calc(100% - (58px - 24px));
+  }
+
+  button {
+    background: url('https://m.wolframalpha.com/images/input_equal.svg');
+    border: 0;
+    height: 24px;
+    width: 24px;
+  }
+
+  #throbber {
+    display: none;
+    margin-top: 30px;
+    text-align: center;
+  }
+
+  #output {
+    padding: 0 16px 16px;
+  }
+
+  #output section {
+    margin-top: 30px;
+  }
+
+  h2 {
+    color: #77a5b6;
+    font-size: 14px;
+    font-weight: normal;
+  }
+
+  small {
+    color: #8e8e8e;
+    font-size: 13px;
+  }
+</style>
