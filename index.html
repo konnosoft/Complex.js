@@ -80,7 +80,7 @@
 
     if (input === '') return;
 
-    history.pushState(null, null, `#${input}`);
+    history.pushState(null, null, `#${encodeURIComponent(input)}`);
 
     input = input.replace(/\*\*/g, '^');
 
