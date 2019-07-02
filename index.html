@@ -13,6 +13,31 @@
   integrity="sha384-9Nhn55MVVN0/4OFx7EE5kpFBPsEMZxKTCnA+4fqDmg12eCTqGi6+BB2LjY8brQxJ"
   crossorigin="anonymous"
 ></script>
+<script>
+  window.WebFontConfig = {
+    custom: {
+      families: [
+        'KaTeX_AMS',
+        'KaTeX_Caligraphic:n4,n7',
+        'KaTeX_Fraktur:n4,n7',
+        'KaTeX_Main:n4,n7,i4,i7',
+        'KaTeX_Math:i4,i7',
+        'KaTeX_Script',
+        'KaTeX_SansSerif:n4,n7,i4',
+        'KaTeX_Size1',
+        'KaTeX_Size2',
+        'KaTeX_Size3',
+        'KaTeX_Size4',
+        'KaTeX_Typewriter',
+      ],
+    },
+  };
+</script>
+<script
+  src="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.js"
+  integrity="sha256-4O4pS1SH31ZqrSO2A/2QJTVjTPqVe+jnYgOWUVr7EEc="
+  crossorigin="anonymous"
+></script>
 <script
   src="https://cdn.jsdelivr.net/npm/algebrite@1.2.1/dist/algebrite.bundle-for-browser.js"
   integrity="sha384-5P0ucNhwmqzZlaS6HZpYGCQUtXnk+9qDz3X3fOpY/G9/GXwhaahIr6v+KoxgZ1Dv"
@@ -27,128 +52,120 @@
   <input />
   <button></button>
 </form>
-<img
-  id="throbber"
-  title="Flickr-inspired Pulsar Throbber by swilsonmc [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons https://commons.wikimedia.org/wiki/File:Flickr-inspired_Pulsar_Throbber.gif"
-  alt="COMPUTING..."
-  src="https://upload.wikimedia.org/wikipedia/commons/6/61/Flickr-inspired_Pulsar_Throbber.gif"
-/>
+<section id="throbber">
+  <p>
+    <img
+      title="Flickr-inspired Pulsar Throbber by swilsonmc [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons https://commons.wikimedia.org/wiki/File:Flickr-inspired_Pulsar_Throbber.gif"
+      alt="COMPUTING..."
+      src="https://upload.wikimedia.org/wikipedia/commons/6/61/Flickr-inspired_Pulsar_Throbber.gif"
+    />
+  </p>
+</section>
 <section id="output"></section>
 <script type="module">
   import AsciiMathParser from 'https://dev.jspm.io/npm:asciimath2tex@1.1.0/asciimath2tex.js';
 
   const AMParser = new AsciiMathParser();
 
-  const $throbber = $('#throbber');
+  $('form').submit((event) => {
+    event.preventDefault();
 
-  $('form')
-    .submit((event) => {
-      event.preventDefault();
-      $throbber.show();
+    let input = $('input')
+      .val()
+      .trim();
 
-      let input = $('input')
-        .val()
-        .trim();
+    if (input === '') return;
 
-      if (input === '') return;
+    history.pushState(null, null, `#${input}`);
 
-      history.pushState(null, null, `#${input}`);
+    input = input.replace(/\*\*/g, '^');
 
-      input = input.replace(/\*\*/g, '^');
+    input = input.replace(/[a-z]{2,}/gi, ($0) => {
+      if ($0 in Algebrite || $0 in Math) return $0;
 
-      input = input.replace(/[a-z]{2,}/gi, ($0) => {
-        if ($0 in Algebrite || $0 in Math) return $0;
+      const lowercase = $0.toLowerCase();
+      if (lowercase in Algebrite || lowercase in Math) return lowercase;
 
-        const lowercase = $0.toLowerCase();
-        if (lowercase in Algebrite || lowercase in Math) return lowercase;
+      if (Number.isFinite(Math[$0.toUpperCase()])) return $0;
 
-        if (Number.isFinite(Math[$0.toUpperCase()])) return $0;
-
-        return $0.length === 1 ? $0 : [...$0].join(' ');
-      });
-
-      $('#output').empty();
-
-      output('Input', input);
-
-      // Simplification
-      const value = Simplify(input);
-
-      if (value == null) return;
-
-      if (!SameQ(value, input)) {
-        output('Result', value);
-      }
-
-      const valueAsNumber = Number(value);
-      const isInteger = IntegerQ(value);
-      const isDecimal = isInteger || Number.isFinite(valueAsNumber);
-
-      if (isInteger && valueAsNumber > 1) {
-        // Prime factorization
-        const factoredForm = Factor(value);
-        const isPrime = PrimeQ(value);
-
-        output(
-          'Prime factorization',
-          factoredForm,
-          isPrime && '(prime number)',
-        );
-      } else if (!isDecimal) {
-        // Polynomial factorization
-        const factoredForm = Factor(value);
-
-        const alternateForms = [
-          ...(factoredForm != null &&
-          !SameQ(factoredForm, input) &&
-          !SameQ(factoredForm, value)
-            ? [factoredForm]
-            : []),
-        ];
-
-        if (alternateForms.length) {
-          output(`Alternate form`, alternateForms);
-        }
-
-        // Differentiation
-        const derivative = D(value);
-
-        if (derivative != null) {
-          output(`Derivative`, `d/(dx) (${value}) = ${derivative}`);
-        }
-
-        // Antidifferentiation
-        const antiderivative = Integrate(value);
-
-        if (antiderivative != null) {
-          output(
-            `Derivative`,
-            `int (${value}) = ${antiderivative}`,
-            '+ constant',
-          );
-        }
-
-        // Symbolic equation solving
-        const roots = Solve(value);
-
-        if (roots != null) {
-          output(`Solution`, roots.map((root) => `x = ${root}`));
-        }
-
-        // Numerical equation solving
-        const numericalRoots = FindRoot(value);
-
-        if (numericalRoots != null) {
-          output(
-            `Numerical solution`,
-            numericalRoots.map((root) => `x ~~ ${root}`),
-          );
-        }
-      }
-    })
-    .submit(() => {
-      $throbber.hide();
+      return $0.length === 1 ? $0 : [...$0].join(' ');
     });
+
+    $('#output').empty();
+
+    output('Input', input);
+
+    // Simplification
+    const value = Simplify(input);
+
+    if (value == null) return;
+
+    if (!SameQ(value, input)) {
+      output('Result', value);
+    }
+
+    const valueAsNumber = Number(value);
+    const isInteger = IntegerQ(value);
+    const isDecimal = isInteger || Number.isFinite(valueAsNumber);
+
+    if (isInteger && valueAsNumber > 0) {
+      // Prime factorization
+      const factoredForm = Factor(value);
+      const isPrime = PrimeQ(value);
+
+      output('Prime factorization', factoredForm, isPrime && '(prime number)');
+    } else if (!isDecimal) {
+      // Polynomial factorization
+      const factoredForm = Factor(value);
+
+      const alternateForms = [
+        ...(factoredForm != null &&
+        !SameQ(factoredForm, input) &&
+        !SameQ(factoredForm, value)
+          ? [factoredForm]
+          : []),
+      ];
+
+      if (alternateForms.length) {
+        output(`Alternate form`, alternateForms);
+      }
+
+      // Differentiation
+      const derivative = D(value);
+
+      if (derivative != null) {
+        output(`Derivative`, `d/(dx) (${value}) = ${derivative}`);
+      }
+
+      // Antidifferentiation
+      const antiderivative = Integrate(value);
+
+      if (antiderivative != null) {
+        output(
+          `Derivative`,
+          `int (${value}) = ${antiderivative}`,
+          '+ constant',
+        );
+      }
+
+      // Symbolic equation solving
+      const roots = Solve(value);
+
+      if (roots != null) {
+        output(`Solution`, roots.map((root) => `x = ${root}`));
+      }
+
+      // Numerical equation solving
+      const numericalRoots = FindRoot(value);
+
+      if (numericalRoots != null) {
+        output(
+          `Numerical solution`,
+          numericalRoots.map((root) => `x ~~ ${root}`),
+        );
+      }
+    }
+  });
 
   function output(title, results, remarks) {
     if (!Array.isArray(results)) results = [results];
@@ -276,6 +293,8 @@
   });
 
   $(window).trigger('hashchange');
+
+  $('#throbber').hide();
 </script>
 <style>
   /* Stolen from https://m.wolframalpha.com */
@@ -322,7 +341,6 @@
   }
 
   #throbber {
-    display: none;
     margin-top: 30px;
     text-align: center;
   }
