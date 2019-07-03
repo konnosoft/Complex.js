@@ -164,17 +164,14 @@
         const roots = Solve(value);
 
         if (roots != null) {
-          output('Solution', roots.map((root) => `x = ${root}`));
+          output('Solution', roots);
         }
 
         // Numerical equation solving
         const numericalRoots = FindRoot(value);
 
         if (numericalRoots != null) {
-          output(
-            'Numerical solution',
-            numericalRoots.map((root) => `x ~~ ${root}`),
-          );
+          output('Numerical solution', numericalRoots);
         }
       }
     })
