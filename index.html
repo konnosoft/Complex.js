@@ -92,6 +92,7 @@
         if ($0 in Algebrite || $0 in Math) return $0;
 
         const lowercase = $0.toLowerCase();
+
         if (lowercase in Algebrite || lowercase in Math) return lowercase;
 
         if (Number.isFinite(Math[$0.toUpperCase()])) return $0;
