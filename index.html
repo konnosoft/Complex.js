@@ -88,6 +88,8 @@
 
       input = input.replace(/\*\*/g, '^');
 
+      input = input.replace(/(\))\s*(\()/g, '$1*$2');
+
       input = input.replace(/[a-z]{2,}/gi, ($0) => {
         if ($0 in Algebrite || $0 in Math) return $0;
 
