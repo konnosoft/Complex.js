@@ -1,3 +1,3 @@
 # Math.js
 
-A JavaScript reimplementation of the `Math` object
+A pure JavaScript implementation of the `Math` object
