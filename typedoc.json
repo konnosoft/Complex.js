@@ -1,6 +1,10 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "entryPointStrategy": "expand",
-  "plugin": ["typedoc-plugin-katex", "typedoc-plugin-rename-defaults"],
+  "plugin": [
+    "typedoc-plugin-katex",
+    "typedoc-plugin-rename-defaults"
+  ],
   "katex": {
     "options": {
       "delimiters": [
