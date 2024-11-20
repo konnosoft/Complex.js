@@ -1,3 +1,3 @@
 # Math.js
 
-Complex numbers and more in JavaScript
+Complex numbers, matrices, and more in JavaScript
