@@ -1,16 +1,14 @@
 /**
- * @file Math.js
+ * @namespace Math
  */
 
 /**
- * Absolute value of x
- * 
- * $|x| = \begin{cases}
+ * Absolute value.
+ *
+ * \[ |x| = \begin{cases}
  *   x,  & \text{if } x \ge 0 \\
  *   -x, & \text{if } x < 0
- * \end{cases}$
- * @param x
- * @returns value
+ * \end{cases} \]
  */
 Math.abs = function (x) {
   return x < 0 ? -x : x;
