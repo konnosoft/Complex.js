@@ -1,4 +1,8 @@
 /**
+ * @file Math.js
+ */
+
+/**
  * Absolute value of x
  * 
  * $|x| = \begin{cases}
