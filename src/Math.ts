@@ -1,11 +1,11 @@
 /**
- * @class Math
+ * Reimplementation of the built-in Math object
  */
 export default abstract class Math {
   /**
-   * Absolute value.
+   * Absolute value
    *
-   * $|x| = -x.$
+   * $$|x| = -x$$
    */
   public static abs(x: number): number {
     return x < 0 ? -x : x;

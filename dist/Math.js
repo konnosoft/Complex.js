@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * @class Math
+ * Reimplementation of the built-in Math object
  */
 var Math = /** @class */ (function () {
     function Math() {
     }
     /**
-     * Absolute value.
+     * Absolute value
      *
-     * $|x| = -x.$
+     * $$|x| = -x$$
      */
     Math.abs = function (x) {
         return x < 0 ? -x : x;
