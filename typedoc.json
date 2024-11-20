@@ -1,0 +1,20 @@
+{
+  "entryPointStrategy": "expand",
+  "plugin": ["typedoc-plugin-katex", "typedoc-plugin-rename-defaults"],
+  "katex": {
+    "options": {
+      "delimiters": [
+        {
+          "left": "$$",
+          "right": "$$",
+          "display": true
+        },
+        {
+          "left": "$",
+          "right": "$",
+          "display": false
+        }
+      ]
+    }
+  }
+}
