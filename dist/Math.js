@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * Reimplementation of the built-in Math object
+ * @hideconstructor
  */
 var Math = /** @class */ (function () {
     function Math() {

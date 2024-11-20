@@ -1,5 +1,6 @@
 /**
  * Reimplementation of the built-in Math object
+ * @hideconstructor
  */
 export default abstract class Math {
   /**
