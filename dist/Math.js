@@ -9,7 +9,10 @@ var Math = /** @class */ (function () {
     /**
      * Absolute value
      *
-     * $$|x| = -x$$
+     * $$|x| = \begin{cases}
+     *    x, & \text{if } x \ge 0 \\\\
+     *   -x, & \text{if } x < 0
+     * \end{cases}$$
      */
     Math.abs = function (x) {
         return x < 0 ? -x : x;
