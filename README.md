@@ -1,3 +1,3 @@
 # Math.js
 
-Pure JavaScript reimplementation of the built-in Math object
+Complex numbers, matrices, and more in JavaScript
