@@ -1,3 +1,3 @@
 # Math.js
 
-Complex numbers, matrices, and more in TypeScript
+Math classes in TypeScript
