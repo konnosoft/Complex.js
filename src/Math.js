@@ -9,6 +9,8 @@
  *   x,  & \text{if } x \ge 0 \\
  *   -x, & \text{if } x < 0
  * \end{cases}$
+ * @param x
+ * @returns value
  */
 Math.abs = function (x) {
   return x < 0 ? -x : x;
