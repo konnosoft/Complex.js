@@ -16,7 +16,7 @@ export default abstract class MyMath {
   }
 
   /**
-   * Limit
+   * Limit of a sequence
    *
    * $$\lim_{i \to \infty} f(i)$$
    */
@@ -28,7 +28,7 @@ export default abstract class MyMath {
   ): number {
     let previous = f(0);
 
-    for (let i = 1; i < maxSteps; i++) {
+    for (let i = 1; i <= maxSteps; i++) {
       const current = f(i);
 
       if (debug) {

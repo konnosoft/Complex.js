@@ -19,7 +19,7 @@ var MyMath = /** @class */ (function () {
         return x < 0 ? -x : x;
     };
     /**
-     * Limit
+     * Limit of a sequence
      *
      * $$\lim_{i \to \infty} f(i)$$
      */
@@ -28,7 +28,7 @@ var MyMath = /** @class */ (function () {
         if (maxSteps === void 0) { maxSteps = Infinity; }
         if (debug === void 0) { debug = false; }
         var previous = f(0);
-        for (var i = 1; i < maxSteps; i++) {
+        for (var i = 1; i <= maxSteps; i++) {
             var current = f(i);
             if (debug) {
                 console.log(i, current);
