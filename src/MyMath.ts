@@ -38,6 +38,7 @@ export default abstract class MyMath {
       if (Math.abs(current - previous) < epsilon) {
         return current;
       }
+
       previous = current;
     }
   }
