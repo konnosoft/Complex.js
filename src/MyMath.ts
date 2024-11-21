@@ -23,6 +23,7 @@ export default abstract class MyMath {
     tolerance: number = 1e-8,
     maxSteps: number = 1e4,
   ): number {
+    console.log(Math.abs.toString());
     let previousValue = f(0);
     for (let i = 1; i < maxSteps; i++) {
       const currentValue = f(i);
