@@ -15,5 +15,3 @@ export default abstract class Math {
     return x < 0 ? -x : x;
   }
 }
-
-console.log(Math.abs.toString())

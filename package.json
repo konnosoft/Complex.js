@@ -3,9 +3,11 @@
   "scripts": {
     "build": "npm run build:dist && npm run build:docs",
     "build:dist": "tsc",
-    "build:docs": "typedoc src"
+    "build:docs": "typedoc src",
+    "test": "ts-node test/*.ts"
   },
   "devDependencies": {
+    "ts-node": "^10.9.2",
     "typedoc": "^0.26.11",
     "typedoc-plugin-katex": "^0.1.2",
     "typedoc-plugin-rename-defaults": "^0.7.1",
