@@ -8,7 +8,7 @@ export default abstract class MyMath {
    *
    * $$|x| = \begin{cases}
    *   -x, & \text{if } x < 0 \\\\
-   *    x, & \text{otherwise}
+   *   x,  & \text{otherwise}
    * \end{cases}$$
    */
   public static abs(x: number): number {
@@ -16,21 +16,29 @@ export default abstract class MyMath {
   }
 
   /**
-   * Discrete limit of a sequence
+   * Limit
+   *
+   * $$\lim_{i \to \infty} f(i)$$
    */
   public static lim(
     f: (i: number) => number,
-    tolerance: number = 1e-8,
-    maxSteps: number = 1e4,
+    epsilon: number = Number.EPSILON,
+    maxSteps: number = Infinity,
+    debug: boolean = false,
   ): number {
-    console.log(Math.abs.toString());
-    let previousValue = f(0);
+    let previous = f(0);
+
     for (let i = 1; i < maxSteps; i++) {
-      const currentValue = f(i);
-      if (Math.abs(currentValue - previousValue) < tolerance) {
-        return currentValue;
+      const current = f(i);
+
+      if (debug) {
+        console.log(i, current);
       }
-      previousValue = currentValue;
+
+      if (Math.abs(current - previous) < epsilon) {
+        return current;
+      }
+      previous = current;
     }
   }
 }

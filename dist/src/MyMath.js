@@ -12,26 +12,31 @@ var MyMath = /** @class */ (function () {
      *
      * $$|x| = \begin{cases}
      *   -x, & \text{if } x < 0 \\\\
-     *    x, & \text{otherwise}
+     *   x,  & \text{otherwise}
      * \end{cases}$$
      */
     MyMath.abs = function (x) {
         return x < 0 ? -x : x;
     };
     /**
-     * Discrete limit of a sequence
+     * Limit
+     *
+     * $$\lim_{i \to \infty} f(i)$$
      */
-    MyMath.lim = function (f, tolerance, maxSteps) {
-        if (tolerance === void 0) { tolerance = 1e-8; }
-        if (maxSteps === void 0) { maxSteps = 1e4; }
-        console.log(Math.abs.toString());
-        var previousValue = f(0);
+    MyMath.lim = function (f, epsilon, maxSteps, debug) {
+        if (epsilon === void 0) { epsilon = Number.EPSILON; }
+        if (maxSteps === void 0) { maxSteps = Infinity; }
+        if (debug === void 0) { debug = false; }
+        var previous = f(0);
         for (var i = 1; i < maxSteps; i++) {
-            var currentValue = f(i);
-            if (Math.abs(currentValue - previousValue) < tolerance) {
-                return currentValue;
+            var current = f(i);
+            if (debug) {
+                console.log(i, current);
             }
-            previousValue = currentValue;
+            if (Math.abs(current - previous) < epsilon) {
+                return current;
+            }
+            previous = current;
         }
     };
     return MyMath;

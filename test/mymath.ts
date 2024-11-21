@@ -1,3 +1,5 @@
 import MyMath from '../src/MyMath';
 
-console.log(MyMath.lim((i) => 1 / i));
+console.log(
+  MyMath.lim((i) => 1 / i, undefined, undefined, true)
+);
