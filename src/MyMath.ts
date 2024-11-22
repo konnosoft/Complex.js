@@ -6,7 +6,7 @@ export default abstract class MyMath {
   /**
    * Absolute value
    *
-   * $$|x| = \begin{cases}
+   * $$|x| \defeq \begin{cases}
    *   -x, & \text{if } x < 0 \\\\
    *   x,  & \text{otherwise}
    * \end{cases}$$
@@ -18,7 +18,7 @@ export default abstract class MyMath {
   /**
    * Exponential function
    *
-   * $$\exp(x) = \sum_{n = 0}^\infty \frac{x^n}{n!}$$
+   * $$\exp(x) \defeq \sum_{n = 0}^\infty \frac{x^n}{n!}$$
    */
   public static exp(x: number): number {
     return this.sum((n) => x**n / this.factorial(n), 0, Infinity);
@@ -27,7 +27,7 @@ export default abstract class MyMath {
   /**
    * Factorial
    *
-   * $$n! = \prod_{i = 1}^n i$$
+   * $$n! \defeq \prod_{i = 1}^n i$$
    */
   public static factorial(n: number): number {
     return this.product((i) => i, 1, n);

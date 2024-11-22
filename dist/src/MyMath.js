@@ -10,7 +10,7 @@ var MyMath = /** @class */ (function () {
     /**
      * Absolute value
      *
-     * $$|x| = \begin{cases}
+     * $$|x| \defeq \begin{cases}
      *   -x, & \text{if } x < 0 \\\\
      *   x,  & \text{otherwise}
      * \end{cases}$$
@@ -21,7 +21,7 @@ var MyMath = /** @class */ (function () {
     /**
      * Exponential function
      *
-     * $$\exp(x) = \sum_{n = 0}^\infty \frac{x^n}{n!}$$
+     * $$\exp(x) \defeq \sum_{n = 0}^\infty \frac{x^n}{n!}$$
      */
     MyMath.exp = function (x) {
         var _this = this;
@@ -30,7 +30,7 @@ var MyMath = /** @class */ (function () {
     /**
      * Factorial
      *
-     * $$n! = \prod_{i = 1}^n i$$
+     * $$n! \defeq \prod_{i = 1}^n i$$
      */
     MyMath.factorial = function (n) {
         return this.product(function (i) { return i; }, 1, n);
