@@ -21,19 +21,17 @@ var MyMath = /** @class */ (function () {
     /**
      * Limit of a sequence
      *
-     * $$\lim_{i \to \infty} f(i)$$
+     * $$\lim_{n \to \infty} f(n)$$
      */
-    MyMath.lim = function (f, epsilon, maxSteps, debug) {
-        if (epsilon === void 0) { epsilon = Number.EPSILON; }
-        if (maxSteps === void 0) { maxSteps = Infinity; }
+    MyMath.lim = function (f, debug) {
         if (debug === void 0) { debug = false; }
         var previous = f(0);
-        for (var i = 1; i <= maxSteps; i++) {
-            var current = f(i);
+        for (var n = 1;; n++) {
+            var current = f(n);
             if (debug) {
-                console.log(i, current);
+                console.log(n, current);
             }
-            if (Math.abs(current - previous) < epsilon) {
+            if (Math.abs(current - previous) < Number.EPSILON) {
                 return current;
             }
             previous = current;

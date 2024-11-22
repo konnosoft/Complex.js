@@ -18,24 +18,22 @@ export default abstract class MyMath {
   /**
    * Limit of a sequence
    *
-   * $$\lim_{i \to \infty} f(i)$$
+   * $$\lim_{n \to \infty} f(n)$$
    */
   public static lim(
-    f: (i: number) => number,
-    epsilon: number = Number.EPSILON,
-    maxSteps: number = Infinity,
+    f: (n: number) => number,
     debug: boolean = false,
   ): number {
     let previous = f(0);
 
-    for (let i = 1; i <= maxSteps; i++) {
-      const current = f(i);
+    for (let n = 1;; n++) {
+      const current = f(n);
 
       if (debug) {
-        console.log(i, current);
+        console.log(n, current);
       }
 
-      if (Math.abs(current - previous) < epsilon) {
+      if (Math.abs(current - previous) < Number.EPSILON) {
         return current;
       }
 
