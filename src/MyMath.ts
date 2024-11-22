@@ -95,10 +95,10 @@ export default abstract class MyMath {
    * @group Auxiliary Methods
    */
   public static lim(f: (n: number) => number): number {
-    let previous = f(2**0);
+    let previous = f(0);
 
-    for (let i = 1;; i++) {
-      const current = f(2**i);
+    for (let n = 1;; n *= 2) {
+      const current = f(n);
       const relativeDifference = (
         Math.abs(current - previous) / Math.abs(current)
       );

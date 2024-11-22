@@ -87,9 +87,9 @@ var MyMath = /** @class */ (function () {
      * @group Auxiliary Methods
      */
     MyMath.lim = function (f) {
-        var previous = f(Math.pow(2, 0));
-        for (var i = 1;; i++) {
-            var current = f(Math.pow(2, i));
+        var previous = f(0);
+        for (var n = 1;; n *= 2) {
+            var current = f(n);
             var relativeDifference = (Math.abs(current - previous) / Math.abs(current));
             if (relativeDifference < Number.EPSILON) {
                 return current;
