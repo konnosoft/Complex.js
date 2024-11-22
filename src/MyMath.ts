@@ -28,6 +28,8 @@ export default abstract class MyMath {
    * Factorial
    *
    * $$n! = \prod_{i = 1}^n i$$
+   *
+   * @group Auxiliary Methods
    */
   public static factorial(n: number): number {
     return this.product((i) => i, 1, n);
@@ -37,6 +39,8 @@ export default abstract class MyMath {
    * Summation
    *
    * $$\sum_{i = a}^b f(i)$$
+   *
+   * @group Auxiliary Methods
    */
   public static sum(
     f: (i: number) => number,
@@ -58,6 +62,8 @@ export default abstract class MyMath {
    * Product
    *
    * $$\prod_{i = a}^b f(i)$$
+   *
+   * @group Auxiliary Methods
    */
   public static product(
     f: (i: number) => number,
@@ -79,6 +85,8 @@ export default abstract class MyMath {
    * Limit
    *
    * $$\lim_{i \to \infty} f(i)$$
+   *
+   * @group Auxiliary Methods
    */
   public static lim(f: (i: number) => number): number {
     let previous = f(2**0);

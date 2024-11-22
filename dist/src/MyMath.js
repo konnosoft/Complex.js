@@ -31,6 +31,8 @@ var MyMath = /** @class */ (function () {
      * Factorial
      *
      * $$n! = \prod_{i = 1}^n i$$
+     *
+     * @group Auxiliary Methods
      */
     MyMath.factorial = function (n) {
         return this.product(function (i) { return i; }, 1, n);
@@ -39,6 +41,8 @@ var MyMath = /** @class */ (function () {
      * Summation
      *
      * $$\sum_{i = a}^b f(i)$$
+     *
+     * @group Auxiliary Methods
      */
     MyMath.sum = function (f, a, b) {
         var _this = this;
@@ -55,6 +59,8 @@ var MyMath = /** @class */ (function () {
      * Product
      *
      * $$\prod_{i = a}^b f(i)$$
+     *
+     * @group Auxiliary Methods
      */
     MyMath.product = function (f, a, b) {
         var _this = this;
@@ -71,6 +77,8 @@ var MyMath = /** @class */ (function () {
      * Limit
      *
      * $$\lim_{i \to \infty} f(i)$$
+     *
+     * @group Auxiliary Methods
      */
     MyMath.lim = function (f) {
         var previous = f(Math.pow(2, 0));
