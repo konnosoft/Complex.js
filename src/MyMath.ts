@@ -88,7 +88,6 @@ export default abstract class MyMath {
       const relativeDifference = (
         Math.abs(current - previous) / Math.abs(current)
       );
-console.log(i, current, relativeDifference);
 
       if (relativeDifference < Number.EPSILON) {
         return current;

@@ -77,7 +77,6 @@ var MyMath = /** @class */ (function () {
         for (var i = 1;; i++) {
             var current = f(Math.pow(2, i));
             var relativeDifference = (Math.abs(current - previous) / Math.abs(current));
-            console.log(i, current, relativeDifference);
             if (relativeDifference < Number.EPSILON) {
                 return current;
             }
