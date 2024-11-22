@@ -16,18 +16,79 @@ export default abstract class MyMath {
   }
 
   /**
-   * Limit of a sequence
+   * Exponential function
    *
-   * $$\lim_{n \to \infty} f(n)$$
+   * $$\exp(x) = \sum_{n = 0}^\infty \frac{x^n}{n!}$$
    */
-  public static lim(f: (n: number) => number): number {
+  public static exp(x: number): number {
+    return this.sum((n) => x**n / this.factorial(n), 0, Infinity);
+  }
+
+  /**
+   * Factorial
+   *
+   * $$n! = \prod_{i = 1}^n i$$
+   */
+  public static factorial(n: number): number {
+    return this.product((i) => i, 1, n);
+  }
+
+  /**
+   * Summation
+   *
+   * $$\sum_{i = a}^b f(i)$$
+   */
+  public static sum(
+    f: (i: number) => number,
+    a: number,
+    b: number,
+  ): number {
+    if (b === Infinity) {
+      return this.lim((i) => this.sum(f, a, i));
+    }
+
+    let result = 0;
+    for (let i = a; i <= b; i++) {
+      result += f(i);
+    }
+    return result;
+  }
+
+  /**
+   * Product
+   *
+   * $$\prod_{i = a}^b f(i)$$
+   */
+  public static product(
+    f: (i: number) => number,
+    a: number,
+    b: number,
+  ): number {
+    if (b === Infinity) {
+      return this.lim((i) => this.product(f, a, i));
+    }
+
+    let result = 1;
+    for (let i = a; i <= b; i++) {
+      result *= f(i);
+    }
+    return result;
+  }
+
+  /**
+   * Limit
+   *
+   * $$\lim_{i \to \infty} f(i)$$
+   */
+  public static lim(f: (i: number) => number): number {
     let previous = f(2**0);
 
-    for (let n = 1;; n++) {
-      const current = f(2**n);
+    for (let i = 1;; i++) {
+      const current = f(2**i);
       const relativeDifference = (
         Math.abs(current - previous) / Math.abs(current)
       );
+console.log(i, current, relativeDifference);
 
       if (relativeDifference < Number.EPSILON) {
         return current;
