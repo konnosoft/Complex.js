@@ -25,8 +25,11 @@ export default abstract class MyMath {
 
     for (let n = 1;; n++) {
       const current = f(2**n);
+      const relativeDifference = (
+        Math.abs(current - previous) / Math.abs(current)
+      );
 
-      if (Math.abs(current - previous) < Number.EPSILON * Math.abs(current)) {
+      if (relativeDifference < Number.EPSILON) {
         return current;
       }
 

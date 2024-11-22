@@ -27,7 +27,8 @@ var MyMath = /** @class */ (function () {
         var previous = f(Math.pow(2, 0));
         for (var n = 1;; n++) {
             var current = f(Math.pow(2, n));
-            if (Math.abs(current - previous) < Number.EPSILON * Math.abs(current)) {
+            var relativeDifference = (Math.abs(current - previous) / Math.abs(current));
+            if (relativeDifference < Number.EPSILON) {
                 return current;
             }
             previous = current;
