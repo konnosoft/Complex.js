@@ -28,6 +28,48 @@ var MyMath = /** @class */ (function () {
         return this.sum(function (n) { return Math.pow(x, n) / _this.factorial(n); }, 0, Infinity);
     };
     /**
+     * Summation
+     *
+     * $$\begin{align}
+     * \sum_{i = m}^n f(i)      &≝ f(m) + f(m + 1) + \cdots + f(n) \\\\
+     * \sum_{i = m}^\infty f(i) &≝ \lim_{n \to \infty} \sum_{i = m}^n f(i)
+     * \end{align}$$
+     *
+     * @group Auxiliary Methods
+     */
+    MyMath.sum = function (f, m, n) {
+        var _this = this;
+        if (n === Infinity) {
+            return this.lim(function (n) { return _this.sum(f, m, n); });
+        }
+        var result = 0;
+        for (var i = m; i <= n; i++) {
+            result += f(i);
+        }
+        return result;
+    };
+    /**
+     * Product
+     *
+     * $$\begin{align}
+     * \prod_{i = m}^n f(i)      &≝ f(m) f(m + 1) \cdots f(n) \\\\
+     * \prod_{i = m}^\infty f(i) &≝ \lim_{n \to \infty} \prod_{i = m}^n f(i)
+     * \end{align}$$
+     *
+     * @group Auxiliary Methods
+     */
+    MyMath.product = function (f, m, n) {
+        var _this = this;
+        if (n === Infinity) {
+            return this.lim(function (n) { return _this.product(f, m, n); });
+        }
+        var result = 1;
+        for (var i = m; i <= n; i++) {
+            result *= f(i);
+        }
+        return result;
+    };
+    /**
      * Factorial
      *
      * $$n! ≝ \prod_{i = 1}^n i$$
@@ -38,45 +80,9 @@ var MyMath = /** @class */ (function () {
         return this.product(function (i) { return i; }, 1, n);
     };
     /**
-     * Summation
-     *
-     * $$\sum_{i = a}^b f(i)$$
-     *
-     * @group Auxiliary Methods
-     */
-    MyMath.sum = function (f, a, b) {
-        var _this = this;
-        if (b === Infinity) {
-            return this.lim(function (i) { return _this.sum(f, a, i); });
-        }
-        var result = 0;
-        for (var i = a; i <= b; i++) {
-            result += f(i);
-        }
-        return result;
-    };
-    /**
-     * Product
-     *
-     * $$\prod_{i = a}^b f(i)$$
-     *
-     * @group Auxiliary Methods
-     */
-    MyMath.product = function (f, a, b) {
-        var _this = this;
-        if (b === Infinity) {
-            return this.lim(function (i) { return _this.product(f, a, i); });
-        }
-        var result = 1;
-        for (var i = a; i <= b; i++) {
-            result *= f(i);
-        }
-        return result;
-    };
-    /**
      * Limit
      *
-     * $$\lim_{i \to \infty} f(i)$$
+     * $$\lim_{n \to \infty} f(n)$$
      *
      * @group Auxiliary Methods
      */

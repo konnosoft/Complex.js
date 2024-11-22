@@ -25,6 +25,58 @@ export default abstract class MyMath {
   }
 
   /**
+   * Summation
+   *
+   * $$\begin{align}
+   * \sum_{i = m}^n f(i)      &≝ f(m) + f(m + 1) + \cdots + f(n) \\\\
+   * \sum_{i = m}^\infty f(i) &≝ \lim_{n \to \infty} \sum_{i = m}^n f(i)
+   * \end{align}$$
+   *
+   * @group Auxiliary Methods
+   */
+  public static sum(
+    f: (i: number) => number,
+    m: number,
+    n: number,
+  ): number {
+    if (n === Infinity) {
+      return this.lim((n) => this.sum(f, m, n));
+    }
+
+    let result = 0;
+    for (let i = m; i <= n; i++) {
+      result += f(i);
+    }
+    return result;
+  }
+
+  /**
+   * Product
+   *
+   * $$\begin{align}
+   * \prod_{i = m}^n f(i)      &≝ f(m) f(m + 1) \cdots f(n) \\\\
+   * \prod_{i = m}^\infty f(i) &≝ \lim_{n \to \infty} \prod_{i = m}^n f(i)
+   * \end{align}$$
+   *
+   * @group Auxiliary Methods
+   */
+  public static product(
+    f: (i: number) => number,
+    m: number,
+    n: number,
+  ): number {
+    if (n === Infinity) {
+      return this.lim((n) => this.product(f, m, n));
+    }
+
+    let result = 1;
+    for (let i = m; i <= n; i++) {
+      result *= f(i);
+    }
+    return result;
+  }
+
+  /**
    * Factorial
    *
    * $$n! ≝ \prod_{i = 1}^n i$$
@@ -36,59 +88,13 @@ export default abstract class MyMath {
   }
 
   /**
-   * Summation
-   *
-   * $$\sum_{i = a}^b f(i)$$
-   *
-   * @group Auxiliary Methods
-   */
-  public static sum(
-    f: (i: number) => number,
-    a: number,
-    b: number,
-  ): number {
-    if (b === Infinity) {
-      return this.lim((i) => this.sum(f, a, i));
-    }
-
-    let result = 0;
-    for (let i = a; i <= b; i++) {
-      result += f(i);
-    }
-    return result;
-  }
-
-  /**
-   * Product
-   *
-   * $$\prod_{i = a}^b f(i)$$
-   *
-   * @group Auxiliary Methods
-   */
-  public static product(
-    f: (i: number) => number,
-    a: number,
-    b: number,
-  ): number {
-    if (b === Infinity) {
-      return this.lim((i) => this.product(f, a, i));
-    }
-
-    let result = 1;
-    for (let i = a; i <= b; i++) {
-      result *= f(i);
-    }
-    return result;
-  }
-
-  /**
    * Limit
    *
-   * $$\lim_{i \to \infty} f(i)$$
+   * $$\lim_{n \to \infty} f(n)$$
    *
    * @group Auxiliary Methods
    */
-  public static lim(f: (i: number) => number): number {
+  public static lim(f: (n: number) => number): number {
     let previous = f(2**0);
 
     for (let i = 1;; i++) {
